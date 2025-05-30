@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_tpm/models/user.dart';
 import 'package:project_tpm/screens/Login.dart';
 import 'package:project_tpm/services/user_service.dart';
+import 'package:project_tpm/shared/color_palette.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
@@ -21,66 +22,140 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 600;
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-        appBar: AppBar(
-          title: Text("Register Page"),
-          backgroundColor: Colors.green,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Image.asset("assets/logo.png", width: 200, height: 200, fit: BoxFit.scaleDown),
-              _usernameField(),
-              _passwordField(),
-              _genderField(),
-              _dateOfBirthField(context),
-              _loginButton(context),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Already Have an Account?"),
-                  SizedBox(width: 8),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Login"),
+        backgroundColor: primaryColor,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: WindFlowPainter(),
+              ),
+            ),
+            Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 8 : width * 0.2,
+                    vertical: 24,
                   ),
-                ],
-              )
-            ],
-          ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Register",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: secondaryColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Image.asset(
+                          "assets/9.png",
+                          width: isMobile ? width * 0.7 : 280,
+                          height: isMobile ? width * 0.7 : 280,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        constraints: BoxConstraints(
+                          maxWidth: 400,
+                        ),
+                        padding: EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: secondaryColor.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 16,
+                              offset: Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _usernameField(),
+                            _passwordField(),
+                            _genderField(),
+                            _dateOfBirthField(context),
+                            SizedBox(height: 12),
+                            _registerButton(context),
+                            SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Already Have an Account?"),
+                                SizedBox(width: 8),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: accentColor,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LoginPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: Text("Login"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _usernameField() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         onChanged: (value) {
           username = value;
         },
         decoration: InputDecoration(
           hintText: "Username",
+          contentPadding: EdgeInsets.all(12.0),
+          filled: true,
+          fillColor: whiteColor,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide:
-                BorderSide(color: isRegisterSuccess ? Colors.green : Colors.red),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(
+              color: isRegisterSuccess ? secondaryColor : dangerColor,
+              width: 2,
+            ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(
+              color: secondaryColor,
+              width: 2,
+            ),
           ),
         ),
       ),
@@ -88,8 +163,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _passwordField() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         obscureText: true,
         onChanged: (value) {
@@ -97,13 +172,22 @@ class _RegisterPageState extends State<RegisterPage> {
         },
         decoration: InputDecoration(
           hintText: "Password",
+          contentPadding: EdgeInsets.all(12.0),
+          filled: true,
+          fillColor: whiteColor,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide:
-                BorderSide(color: isRegisterSuccess ? Colors.green : Colors.red),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(
+              color: isRegisterSuccess ? secondaryColor : dangerColor,
+              width: 2,
+            ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(
+              color: secondaryColor,
+              width: 2,
+            ),
           ),
         ),
       ),
@@ -111,8 +195,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _genderField() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -147,8 +231,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _dateOfBirthField(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: GestureDetector(
         onTap: () async {
           DateTime? pickedDate = await showDatePicker(
@@ -166,8 +250,9 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           decoration: BoxDecoration(
-            border: Border.all(color: isRegisterSuccess ? Colors.green : Colors.red),
-            borderRadius: BorderRadius.circular(10),
+            color: whiteColor,
+            border: Border.all(color: isRegisterSuccess ? secondaryColor : dangerColor, width: 2),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,14 +271,17 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _loginButton(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  Widget _registerButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: (isRegisterSuccess) ? Colors.green : Colors.red,
-          minimumSize: Size(double.infinity, 50),
+          foregroundColor: whiteColor,
+          backgroundColor: (isRegisterSuccess) ? accentColor : dangerColor,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         onPressed: () async {
           String text = "";
@@ -226,8 +314,36 @@ class _RegisterPageState extends State<RegisterPage> {
             );
           }
         },
-        child: Text("Register"),
+        child: Text("Register", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
+}
+
+class WindFlowPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = secondaryColor.withOpacity(0.25)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+
+    Path path1 = Path();
+    path1.moveTo(0, size.height * 0.2);
+    path1.cubicTo(size.width * 0.2, size.height * 0.1, size.width * 0.8, size.height * 0.3, size.width, size.height * 0.2);
+    canvas.drawPath(path1, paint);
+
+    Path path2 = Path();
+    path2.moveTo(0, size.height * 0.5);
+    path2.cubicTo(size.width * 0.3, size.height * 0.4, size.width * 0.7, size.height * 0.6, size.width, size.height * 0.5);
+    canvas.drawPath(path2, paint..color = secondaryColor.withOpacity(0.18));
+
+    Path path3 = Path();
+    path3.moveTo(0, size.height * 0.8);
+    path3.cubicTo(size.width * 0.1, size.height * 0.7, size.width * 0.9, size.height * 0.9, size.width, size.height * 0.8);
+    canvas.drawPath(path3, paint..color = accentColor.withOpacity(0.15));
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

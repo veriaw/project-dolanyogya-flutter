@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Login",
+                        "Dolan Yogya",
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,

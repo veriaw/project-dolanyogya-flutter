@@ -46,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Register",
+                        "Dolan Yogya",
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,

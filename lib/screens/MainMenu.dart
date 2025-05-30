@@ -39,8 +39,8 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Main Menu"),
-          backgroundColor: Colors.green,
+        title: Text("Main Menu"),
+        backgroundColor: Colors.green,
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -276,8 +276,49 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
           },
         ),
       ][currentPageIndex],
-
     );
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void showError(String message) {
+    setState(() {
+      _errorMessage = message;
+    });
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      _isLoading = true;
+    });
+  }
+
+  @override
+  void showAlamPlaceCategory(List<PlaceModel> placeCategoryList) {
+    setState(() {
+      _placeAlamList = placeCategoryList;
+    });
+  }
+
+  @override
+  void showBudayaPlaceCategory(List<PlaceModel> placeCategoryList) {
+    setState(() {
+      _placeBudayaList = placeCategoryList;
+    });
+  }
+
+  @override
+  void showTamanPlaceCategory(List<PlaceModel> placeCategoryList) {
+    setState(() {
+      _placeTamanList = placeCategoryList;
+    });
   }
   
   @override

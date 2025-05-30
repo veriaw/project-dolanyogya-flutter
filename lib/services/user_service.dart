@@ -59,4 +59,8 @@ class UserService {
       return false;
     }
   }
+
+  Future<User?> getUser(String username) async {
+    return userBox.get(username);
+  }
 }

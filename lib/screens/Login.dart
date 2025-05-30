@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_tpm/screens/MainMenu.dart';
 import 'package:project_tpm/screens/register.dart';
 import 'package:project_tpm/services/user_service.dart';
+import 'package:project_tpm/shared/color_palette.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -19,46 +20,108 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 600;
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-        appBar: AppBar(
-          title: Text("Login Page"),
-          backgroundColor: Colors.green,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
+        backgroundColor: primaryColor,
+        body: Stack(
           children: [
-            Container(
-              child: Image.asset("assets/logo.png", width: 200,height: 200, fit: BoxFit.scaleDown),
+            Positioned.fill(
+              child: CustomPaint(
+                painter: WindFlowPainter(),
+              ),
             ),
-          _usernameField(), 
-          _passwordField(), 
-          _loginButton(context),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-                Text("Doesnt Have an Account?"),
-                SizedBox(width: 8),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blue
-                    ),
-                    onPressed: ()=>{
-                        Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegisterPage(),
+            Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isMobile ? 8 : width * 0.2,
+                    vertical: 24,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Login",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: secondaryColor,
                         ),
-                        )
-                    }, 
-                    child: Text("Register")
-                )
-            ],
-          )
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Image.asset(
+                          "assets/3.png",
+                          width: isMobile ? width * 0.7 : 280,
+                          height: isMobile ? width * 0.7 : 280,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        constraints: BoxConstraints(
+                          maxWidth: 400,
+                        ),
+                        padding: EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: secondaryColor.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 16,
+                              offset: Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _usernameField(),
+                            _passwordField(),
+                            SizedBox(height: 12),
+                            _loginButton(context),
+                            SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Doesn't Have an Account?"),
+                                SizedBox(width: 8),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: accentColor,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RegisterPage(),
+                                      ),
+                                    );
+                                  },
+                                  child: Text("Register"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ],
-          ),
         ),
       ),
     );
@@ -66,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _usernameField() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         enabled: true,
         onChanged: (value) {
@@ -74,16 +137,22 @@ class _LoginPageState extends State<LoginPage> {
         },
         decoration: InputDecoration(
           hintText: "Username",
-          contentPadding: EdgeInsets.all(8.0),
-          enabledBorder:OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+          contentPadding: EdgeInsets.all(12.0),
+          filled: true,
+          fillColor: whiteColor,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: (isLoginSuccess)? Colors.green : Colors.red),
-          ), 
+              color: (isLoginSuccess) ? secondaryColor : dangerColor,
+              width: 2,
+            ),
+          ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: Colors.green),
+              color: secondaryColor,
+              width: 2,
+            ),
           ),
         ),
       ),
@@ -92,25 +161,30 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _passwordField() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         enabled: true,
+        obscureText: true,
         onChanged: (value) {
           password = value;
         },
         decoration: InputDecoration(
           hintText: "Password",
-          contentPadding: EdgeInsets.all(8.0),
-           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+          contentPadding: EdgeInsets.all(12.0),
+          filled: true,
+          fillColor: whiteColor,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: (isLoginSuccess) ? Colors.green : Colors.red,
+              color: (isLoginSuccess) ? secondaryColor : dangerColor,
+              width: 2,
             ),
-          ), 
+          ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: Colors.black,
+              color: secondaryColor,
+              width: 2,
             ),
           ),
         ),
@@ -120,12 +194,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginButton(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      width: MediaQuery.of(context).size.width,
+      width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: (isLoginSuccess) ? Colors.green : Colors.red
+          foregroundColor: whiteColor,
+          backgroundColor: accentColor,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         onPressed: () async {
           String text = "";
@@ -138,14 +215,14 @@ class _LoginPageState extends State<LoginPage> {
               isLoginSuccess = true;
             });
           } else {
-           setState(() {
+            setState(() {
               text = "Username atau Password Salah!";
               isLoginSuccess = false;
-           });
+            });
           }
           SnackBar snackBar = SnackBar(content: Text(text));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          if(isLoginSuccess==true){
+          if (isLoginSuccess == true) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -154,8 +231,36 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
         },
-        child: Text("Login"),
+        child: Text("Login", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
+}
+
+class WindFlowPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = secondaryColor.withOpacity(0.25)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
+
+    Path path1 = Path();
+    path1.moveTo(0, size.height * 0.2);
+    path1.cubicTo(size.width * 0.2, size.height * 0.1, size.width * 0.8, size.height * 0.3, size.width, size.height * 0.2);
+    canvas.drawPath(path1, paint);
+
+    Path path2 = Path();
+    path2.moveTo(0, size.height * 0.5);
+    path2.cubicTo(size.width * 0.3, size.height * 0.4, size.width * 0.7, size.height * 0.6, size.width, size.height * 0.5);
+    canvas.drawPath(path2, paint..color = secondaryColor.withOpacity(0.18));
+
+    Path path3 = Path();
+    path3.moveTo(0, size.height * 0.8);
+    path3.cubicTo(size.width * 0.1, size.height * 0.7, size.width * 0.9, size.height * 0.9, size.width, size.height * 0.8);
+    canvas.drawPath(path3, paint..color = accentColor.withOpacity(0.15));
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

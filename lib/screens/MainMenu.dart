@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_tpm/models/place.dart';
 import 'package:project_tpm/presenters/place_presenter.dart';
+import 'package:project_tpm/screens/DetailPlace.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -80,7 +81,14 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
                       width: 200,
                       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
                       child: InkWell(
-                        onTap: ()=>{print("CLICKED BUDAYA")},
+                        onTap: ()=>{
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailPlace(place: place),
+                            ),
+                          )
+                        },
                         child: Card(
                             elevation: 4,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -140,7 +148,14 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
                       width: 200,
                       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
                       child: InkWell(
-                        onTap: ()=>{print("CLICKED TAMAN HIBURAN")},
+                        onTap: ()=>{
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailPlace(place: place),
+                            ),
+                          )
+                        },
                         child: Card(
                             elevation: 4,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -200,7 +215,14 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
                       width: 200,
                       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
                       child: InkWell(
-                        onTap: ()=>{print("CLICKED CAGAR ALAM")},
+                        onTap: ()=>{
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailPlace(place: place),
+                            ),
+                          )
+                        },
                         child: Card(
                             elevation: 4,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

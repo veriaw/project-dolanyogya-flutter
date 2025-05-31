@@ -20,4 +20,5 @@ class BaseNetwork {
       throw Exception('Failed to Load Data!');
     }
   }
+  
 }

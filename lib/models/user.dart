@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 
-part 'user.g.dart'; // Generated file
+part 'user.g.dart';
 
 @HiveType(typeId: 0)
 class User extends HiveObject {
@@ -17,7 +17,13 @@ class User extends HiveObject {
   DateTime? dateOfBirth;
 
   @HiveField(4)
-  String? publicKey; // 🔑 Field baru
+  String? publicKey;
+
+  @HiveField(5)
+  String? email;
+
+  @HiveField(6)
+  String? phone;
 
   User({
     required this.username,
@@ -25,5 +31,7 @@ class User extends HiveObject {
     this.gender,
     this.dateOfBirth,
     this.publicKey,
+    this.email,
+    this.phone,
   });
 }

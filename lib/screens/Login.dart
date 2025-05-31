@@ -3,6 +3,7 @@ import 'package:project_tpm/screens/MainMenu.dart';
 import 'package:project_tpm/screens/register.dart';
 import 'package:project_tpm/services/user_service.dart';
 import 'package:project_tpm/shared/color_palette.dart';
+import 'package:project_tpm/models/user.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Dolan Yogya",
+                        "Login",
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -208,8 +209,9 @@ class _LoginPageState extends State<LoginPage> {
           String text = "";
 
           final data = await userService.login(username, password);
+          final user = await userService.getUser(username);
 
-          if (data) {
+          if (data && user != null) {
             setState(() {
               text = "Login success!";
               isLoginSuccess = true;
@@ -222,11 +224,11 @@ class _LoginPageState extends State<LoginPage> {
           }
           SnackBar snackBar = SnackBar(content: Text(text));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          if (isLoginSuccess == true) {
+          if (isLoginSuccess == true && user != null) {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => MainMenu(),
+                builder: (context) => MainMenu(user: user),
               ),
             );
           }

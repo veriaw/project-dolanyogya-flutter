@@ -3,7 +3,6 @@ import 'package:project_tpm/models/user.dart';
 import 'package:project_tpm/screens/Login.dart';
 import 'package:project_tpm/services/user_service.dart';
 import 'package:project_tpm/shared/color_palette.dart';
-import 'package:project_tpm/shared/color_palette.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
@@ -23,9 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 600;
-
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < 600;
 
@@ -138,8 +134,6 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _usernameField() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         onChanged: (value) {
           username = value;
@@ -149,15 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
           contentPadding: EdgeInsets.all(12.0),
           filled: true,
           fillColor: whiteColor,
-          contentPadding: EdgeInsets.all(12.0),
-          filled: true,
-          fillColor: whiteColor,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderSide: BorderSide(
-              color: isRegisterSuccess ? secondaryColor : dangerColor,
-              width: 2,
-            ),
             borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
               color: isRegisterSuccess ? secondaryColor : dangerColor,
@@ -165,11 +151,6 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderSide: BorderSide(
-              color: secondaryColor,
-              width: 2,
-            ),
             borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
               color: secondaryColor,
@@ -184,8 +165,6 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _passwordField() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         obscureText: true,
         onChanged: (value) {
@@ -196,15 +175,7 @@ class _RegisterPageState extends State<RegisterPage> {
           contentPadding: EdgeInsets.all(12.0),
           filled: true,
           fillColor: whiteColor,
-          contentPadding: EdgeInsets.all(12.0),
-          filled: true,
-          fillColor: whiteColor,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderSide: BorderSide(
-              color: isRegisterSuccess ? secondaryColor : dangerColor,
-              width: 2,
-            ),
             borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
               color: isRegisterSuccess ? secondaryColor : dangerColor,
@@ -217,11 +188,6 @@ class _RegisterPageState extends State<RegisterPage> {
               color: secondaryColor,
               width: 2,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderSide: BorderSide(
-              color: secondaryColor,
-              width: 2,
-            ),
           ),
         ),
       ),
@@ -229,8 +195,6 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _genderField() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       child: Column(
@@ -269,8 +233,6 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _dateOfBirthField(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
       child: GestureDetector(
         onTap: () async {
           DateTime? pickedDate = await showDatePicker(
@@ -288,9 +250,6 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           decoration: BoxDecoration(
-            color: whiteColor,
-            border: Border.all(color: isRegisterSuccess ? secondaryColor : dangerColor, width: 2),
-            borderRadius: BorderRadius.circular(12),
             color: whiteColor,
             border: Border.all(color: isRegisterSuccess ? secondaryColor : dangerColor, width: 2),
             borderRadius: BorderRadius.circular(12),
@@ -315,17 +274,8 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _registerButton(BuildContext context) {
     return Container(
       width: double.infinity,
-  Widget _registerButton(BuildContext context) {
-    return Container(
-      width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: whiteColor,
-          backgroundColor: (isRegisterSuccess) ? accentColor : dangerColor,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
           foregroundColor: whiteColor,
           backgroundColor: (isRegisterSuccess) ? accentColor : dangerColor,
           padding: EdgeInsets.symmetric(vertical: 16),
@@ -365,38 +315,9 @@ class _RegisterPageState extends State<RegisterPage> {
           }
         },
         child: Text("Register", style: TextStyle(fontWeight: FontWeight.bold)),
-        child: Text("Register", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
-}
-
-class WindFlowPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = secondaryColor.withOpacity(0.25)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3;
-
-    Path path1 = Path();
-    path1.moveTo(0, size.height * 0.2);
-    path1.cubicTo(size.width * 0.2, size.height * 0.1, size.width * 0.8, size.height * 0.3, size.width, size.height * 0.2);
-    canvas.drawPath(path1, paint);
-
-    Path path2 = Path();
-    path2.moveTo(0, size.height * 0.5);
-    path2.cubicTo(size.width * 0.3, size.height * 0.4, size.width * 0.7, size.height * 0.6, size.width, size.height * 0.5);
-    canvas.drawPath(path2, paint..color = secondaryColor.withOpacity(0.18));
-
-    Path path3 = Path();
-    path3.moveTo(0, size.height * 0.8);
-    path3.cubicTo(size.width * 0.1, size.height * 0.7, size.width * 0.9, size.height * 0.9, size.width, size.height * 0.8);
-    canvas.drawPath(path3, paint..color = accentColor.withOpacity(0.15));
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class WindFlowPainter extends CustomPainter {

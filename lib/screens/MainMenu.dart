@@ -320,47 +320,4 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
       _placeTamanList = placeCategoryList;
     });
   }
-  
-  @override
-  void hideLoading() {
-    setState(() {
-      _isLoading = false;
-    });
-  }
-  
-  @override
-  void showError(String message) {
-    setState(() {
-      _errorMessage = message;
-    });
-  }
-  
-  @override
-  void showLoading() {
-    setState(() {
-      _isLoading = true;
-    });
-  }
-  
-  @override
-  void showAlamPlaceCategory(List<PlaceModel> placeCategoryList) {
-    setState(() {
-      _placeAlamList=placeCategoryList;
-    });
-  }
-  
-  @override
-  void showBudayaPlaceCategory(List<PlaceModel> placeCategoryList) {
-    setState(() {
-      _placeBudayaList=placeCategoryList;
-    });
-  }
-  
-  @override
-  void showTamanPlaceCategory(List<PlaceModel> placeCategoryList) {
-    setState(() {
-      _placeTamanList=placeCategoryList;
-    });
-  }
-  
 }

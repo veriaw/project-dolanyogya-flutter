@@ -24,13 +24,8 @@ class _LoginPageState extends State<LoginPage> {
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < 600;
 
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 600;
-
     return SafeArea(
       child: Scaffold(
-        backgroundColor: primaryColor,
-        body: Stack(
         backgroundColor: primaryColor,
         body: Stack(
           children: [
@@ -136,7 +131,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget _usernameField() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         enabled: true,
         onChanged: (value) {
@@ -149,27 +143,14 @@ class _LoginPageState extends State<LoginPage> {
           fillColor: whiteColor,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(12)),
-          contentPadding: EdgeInsets.all(12.0),
-          filled: true,
-          fillColor: whiteColor,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: (isLoginSuccess) ? secondaryColor : dangerColor,
-              width: 2,
-            ),
-          ),
               color: (isLoginSuccess) ? secondaryColor : dangerColor,
               width: 2,
             ),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: secondaryColor,
-              width: 2,
-            ),
               color: secondaryColor,
               width: 2,
             ),
@@ -182,10 +163,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _passwordField() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
-      margin: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
         enabled: true,
-        obscureText: true,
         obscureText: true,
         onChanged: (value) {
           password = value;
@@ -197,25 +176,14 @@ class _LoginPageState extends State<LoginPage> {
           fillColor: whiteColor,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(12)),
-          contentPadding: EdgeInsets.all(12.0),
-          filled: true,
-          fillColor: whiteColor,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: (isLoginSuccess) ? secondaryColor : dangerColor,
-              width: 2,
               color: (isLoginSuccess) ? secondaryColor : dangerColor,
               width: 2,
             ),
           ),
-          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(12)),
-            borderRadius: BorderRadius.all(Radius.circular(12)),
             borderSide: BorderSide(
-              color: secondaryColor,
-              width: 2,
               color: secondaryColor,
               width: 2,
             ),
@@ -228,15 +196,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _loginButton(BuildContext context) {
     return Container(
       width: double.infinity,
-      width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          foregroundColor: whiteColor,
-          backgroundColor: accentColor,
-          padding: EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
           foregroundColor: whiteColor,
           backgroundColor: accentColor,
           padding: EdgeInsets.symmetric(vertical: 16),
@@ -257,10 +218,8 @@ class _LoginPageState extends State<LoginPage> {
             });
           } else {
             setState(() {
-            setState(() {
               text = "Username atau Password Salah!";
               isLoginSuccess = false;
-            });
             });
           }
           SnackBar snackBar = SnackBar(content: Text(text));
@@ -275,38 +234,9 @@ class _LoginPageState extends State<LoginPage> {
           }
         },
         child: Text("Login", style: TextStyle(fontWeight: FontWeight.bold)),
-        child: Text("Login", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
-}
-
-class WindFlowPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = secondaryColor.withOpacity(0.25)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3;
-
-    Path path1 = Path();
-    path1.moveTo(0, size.height * 0.2);
-    path1.cubicTo(size.width * 0.2, size.height * 0.1, size.width * 0.8, size.height * 0.3, size.width, size.height * 0.2);
-    canvas.drawPath(path1, paint);
-
-    Path path2 = Path();
-    path2.moveTo(0, size.height * 0.5);
-    path2.cubicTo(size.width * 0.3, size.height * 0.4, size.width * 0.7, size.height * 0.6, size.width, size.height * 0.5);
-    canvas.drawPath(path2, paint..color = secondaryColor.withOpacity(0.18));
-
-    Path path3 = Path();
-    path3.moveTo(0, size.height * 0.8);
-    path3.cubicTo(size.width * 0.1, size.height * 0.7, size.width * 0.9, size.height * 0.9, size.width, size.height * 0.8);
-    canvas.drawPath(path3, paint..color = accentColor.withOpacity(0.15));
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class WindFlowPainter extends CustomPainter {

@@ -1,0 +1,2 @@
+D:/Mobile App Project/project-dolanyogya-flutter/android/app/.cxx/Debug/144n1z41/x86/CMakeFiles/edit_cache.dir
+D:/Mobile App Project/project-dolanyogya-flutter/android/app/.cxx/Debug/144n1z41/x86/CMakeFiles/rebuild_cache.dir

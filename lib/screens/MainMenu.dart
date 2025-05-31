@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:project_tpm/models/place.dart';
+import 'package:project_tpm/models/user.dart';
 import 'package:project_tpm/presenters/place_presenter.dart';
+import 'package:project_tpm/screens/Profile.dart';
+import 'package:project_tpm/screens/login.dart';
 
 class MainMenu extends StatefulWidget {
-  const MainMenu({super.key});
+  final User user;
+  const MainMenu({super.key, required this.user});
 
   @override
   State<MainMenu> createState() => _MainMenuState();
@@ -35,8 +39,8 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Main Menu"),
-          backgroundColor: Colors.green,
+        title: Text("Main Menu"),
+        backgroundColor: Colors.green,
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -63,12 +67,10 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
         ],
       ),
       body: <Widget>[
-        // index 0
         SingleChildScrollView(
           child: Column(
             children: [
               Text("Category Budaya"),
-              //List View Budaya
               SizedBox(
                 height: 250,
                 child: ListView.builder(
@@ -127,7 +129,6 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
                   },
                 ),
               ),
-              //ListView Taman Hiburan
               Text("Category Taman Hiburan"),
               SizedBox(
                 height: 250,
@@ -187,7 +188,6 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
                   },
                 ),
               ),
-              //ListView Cagar Alam
               Text("Category Cagar Alam"),
               SizedBox(
                 height: 250,
@@ -252,7 +252,6 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
         ),
         
 
-        // index 1
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -265,63 +264,60 @@ class _MainMenuState extends State<MainMenu> implements PlaceView{
           ],
         ),
 
-        // index 2
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Welcome to User Profile")
-              ],
-            )
-          ],
-        )
+        UserProfileScreen(
+          username: widget.user.username,
+          gender: widget.user.gender,
+          dateOfBirth: widget.user.dateOfBirth,
+          onLogout: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => LoginPage()),
+              (route) => false,
+            );
+          },
+        ),
       ][currentPageIndex],
-
     );
   }
-  
+
   @override
   void hideLoading() {
     setState(() {
       _isLoading = false;
     });
   }
-  
+
   @override
   void showError(String message) {
     setState(() {
       _errorMessage = message;
     });
   }
-  
+
   @override
   void showLoading() {
     setState(() {
       _isLoading = true;
     });
   }
-  
+
   @override
   void showAlamPlaceCategory(List<PlaceModel> placeCategoryList) {
     setState(() {
-      _placeAlamList=placeCategoryList;
+      _placeAlamList = placeCategoryList;
     });
   }
-  
+
   @override
   void showBudayaPlaceCategory(List<PlaceModel> placeCategoryList) {
     setState(() {
-      _placeBudayaList=placeCategoryList;
+      _placeBudayaList = placeCategoryList;
     });
   }
-  
+
   @override
   void showTamanPlaceCategory(List<PlaceModel> placeCategoryList) {
     setState(() {
-      _placeTamanList=placeCategoryList;
+      _placeTamanList = placeCategoryList;
     });
   }
-  
 }

@@ -18,6 +18,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.4.0
+  image_picker: ^1.1.2
   latlong2: ^0.9.1
   path_provider: ^2.1.5
   rsa_encrypt: ^2.0.0

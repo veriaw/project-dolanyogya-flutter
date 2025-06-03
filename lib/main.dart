@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:project_tpm/models/place_hivi.dart';
 import 'package:project_tpm/models/user.dart';
 import 'package:project_tpm/screens/Login.dart';
+import 'package:project_tpm/services/bookmark_service.dart';
 import 'package:project_tpm/utils/rsa_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +13,10 @@ void main() async {
   Hive.registerAdapter(UserAdapter());
 
   await Hive.openBox<User>('users');
+
+  Hive.registerAdapter(HiviModelAdapter()); // daftar adapter
+
+  await BookmarkService.openBox();
 
   final prefs = await SharedPreferences.getInstance();
   if (!prefs.containsKey('privateKey')) {

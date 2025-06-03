@@ -4,6 +4,7 @@ import 'package:project_tpm/screens/register.dart';
 import 'package:project_tpm/services/user_service.dart';
 import 'package:project_tpm/shared/color_palette.dart';
 import 'package:project_tpm/models/user.dart';
+import 'package:project_tpm/utils/user_manager.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -16,6 +17,7 @@ bool isLoginSuccess = true;
 
 class _LoginPageState extends State<LoginPage> {
   final userService = UserService();
+  final userManager = UserProfileManager();
   String username = "";
   String password = "";
 
@@ -209,9 +211,10 @@ class _LoginPageState extends State<LoginPage> {
           String text = "";
 
           final data = await userService.login(username, password);
-          final user = await userService.getUser(username);
+          final user = await userService.getUserByUsername(username);
 
           if (data && user != null) {
+            await userManager.saveUserProfile(id: user.id!, username: user.username, gender: user.gender, birthdate: user.dateOfBirth);
             setState(() {
               text = "Login success!";
               isLoginSuccess = true;
@@ -228,7 +231,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => MainMenu(user: user),
+                builder: (context) => MainMenu(),
               ),
             );
           }

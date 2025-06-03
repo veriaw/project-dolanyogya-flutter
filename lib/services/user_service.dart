@@ -6,8 +6,11 @@ import '../models/user.dart';
 class UserService {
   final Box<User> userBox = Hive.box<User>('users');
 
+  // ADD USER
   Future<bool> addUser(User user) async {
-    if (userBox.containsKey(user.username)) return false;
+    // Cek jika username sudah ada
+    final existingUser = userBox.values.where((u) => u.username == user.username);
+    if (existingUser.isNotEmpty) return false;
 
     final publicKey = await RSAHelper.getPublicKey();
     if (publicKey == null) return false;
@@ -22,26 +25,35 @@ class UserService {
       publicKey: CryptoUtils.encodeRSAPublicKeyToPem(publicKey),
     );
 
-    await userBox.put(user.username, newUser);
+    // Auto-increment ID: ambil id tertinggi lalu +1
+    final maxId = userBox.keys
+        .whereType<int>()
+        .fold<int>(0, (prev, k) => k > prev ? k : prev);
+    final newId = maxId + 1;
+    newUser.id = newId;
+
+    await userBox.put(newId, newUser);
     return true;
   }
 
+  // LOGIN
   Future<bool> login(String username, String passwordInput) async {
-    final user = userBox.get(username);
-    if (user == null) return false;
+    final matchingUsers = userBox.values.where((u) => u.username == username);
+    if (matchingUsers.isEmpty) return false;
+
+    final user = matchingUsers.first;
 
     final privateKey = await RSAHelper.getPrivateKey();
     if (privateKey == null) return false;
 
     final decryptedPassword = await RSAHelper.decrypt(user.password, privateKey);
-
     return decryptedPassword == passwordInput;
   }
 
   // UPDATE
-  Future<bool> updateUser(int index, User updatedUser) async {
+  Future<bool> updateUser(int id, User updatedUser) async {
     try {
-      await userBox.putAt(index, updatedUser);
+      await userBox.put(id, updatedUser);
       return true;
     } catch (e) {
       print("Error updating user: $e");
@@ -50,9 +62,9 @@ class UserService {
   }
 
   // DELETE
-  Future<bool> deleteUser(int index) async {
+  Future<bool> deleteUser(int id) async {
     try {
-      await userBox.deleteAt(index);
+      await userBox.delete(id);
       return true;
     } catch (e) {
       print("Error deleting user: $e");
@@ -60,7 +72,14 @@ class UserService {
     }
   }
 
-  Future<User?> getUser(String username) async {
-    return userBox.get(username);
+  // GET USER BY USERNAME
+  Future<User?> getUserByUsername(String username) async {
+    final matchingUsers = userBox.values.where((u) => u.username == username);
+    return matchingUsers.isNotEmpty ? matchingUsers.first : null;
+  }
+
+  // GET USER BY ID
+  Future<User?> getUserById(int id) async {
+    return userBox.get(id);
   }
 }

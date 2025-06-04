@@ -27,7 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: primaryColor,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : primaryColor,
         body: Stack(
           children: [
             Positioned.fill(

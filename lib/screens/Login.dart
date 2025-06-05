@@ -215,7 +215,12 @@ class _LoginPageState extends State<LoginPage> {
           final user = await userService.getUserByUsername(username);
 
           if (data && user != null) {
-            await userManager.saveUserProfile(id: user.id!, username: user.username, gender: user.gender, birthdate: user.dateOfBirth);
+            await userManager.saveUserProfile(
+              id: user.id!,
+              username: user.username,
+              gender: user.gender,
+              birthdate: user.dateOfBirth,
+            );
             // Set session login
             final prefs = await SharedPreferences.getInstance();
             await prefs.setBool('is_logged_in', true);

@@ -847,7 +847,7 @@ class _MainMenuState extends State<MainMenu> implements PlaceView {
     final profile = await userManager.getUserProfile();
     if (profile != null) {
       setState(() {
-        id = profile['id']; // key yang benar sesuai map dari UserProfileManager
+        id = profile['id'];
         username = profile['username'];
         birthOfDate = profile['birthdate'];
         gender = profile['gender'];

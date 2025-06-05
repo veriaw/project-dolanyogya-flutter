@@ -76,7 +76,7 @@ class _DetailPlaceState extends State<DetailPlace> {
   }
 
   Future<List<LatLng>> getRoute(
-      LatLng currentPostition, LatLng placePosition) async {
+    LatLng currentPostition, LatLng placePosition) async {
     final route = await getRoutePolyline(
         startLat: currentPostition.latitude,
         startLng: currentPostition.longitude,

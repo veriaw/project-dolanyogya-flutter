@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:project_tpm/main.dart';
 import 'package:project_tpm/screens/Login.dart';
+import 'package:project_tpm/screens/EditProfile.dart';
+import 'package:project_tpm/models/user.dart';
+import 'package:project_tpm/services/user_service.dart';
+import 'package:project_tpm/utils/user_manager.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int id;
@@ -30,11 +34,51 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   File? _profileImage;
+  User? _userData;
+  final userService = UserService();
+  final userManager = UserProfileManager();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadProfileImage();
+    _initializeProfile();
+  }
+
+  Future<void> _initializeProfile() async {
+    await _loadProfileImage();
+    await _loadUserData();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _loadUserData() async {
+    // Ambil data user dari SharedPreferences, jika tidak ada fallback ke Hive
+    final profile = await userManager.getUserProfile();
+    if (profile != null) {
+      setState(() {
+        _userData = User(
+          id: profile['id'],
+          username: profile['username'],
+          gender: profile['gender'],
+          dateOfBirth: profile['birthdate'],
+          password: '', // password tidak digunakan di profile
+        );
+      });
+    } else {
+      final user = await userService.getUserById(widget.id);
+      setState(() {
+        _userData = user ??
+            User(
+              id: widget.id,
+              username: widget.username,
+              gender: widget.gender,
+              dateOfBirth: widget.dateOfBirth,
+              password: '',
+            );
+      });
+    }
   }
 
   Future<void> _loadProfileImage() async {
@@ -47,7 +91,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Future<void> _changeProfileImage() async {
-    // Ambil foto dari kamera, bukan galeri
     final image = await ProfileImageHelper.pickAndSaveProfileImageFromCamera(widget.id);
     if (image != null && mounted) {
       setState(() {
@@ -56,8 +99,42 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
+  Future<void> _openEditProfile() async {
+    if (_userData == null) return;
+    final updatedUser = await Navigator.push<User>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfilePage(
+          user: _userData!,
+          onProfileUpdated: (_) {},
+        ),
+      ),
+    );
+    if (updatedUser != null) {
+      // Update Hive
+      await userService.updateUser(updatedUser.id!, updatedUser);
+      // Update SharedPreferences
+      await userManager.saveUserProfile(
+        id: updatedUser.id!,
+        username: updatedUser.username,
+        birthdate: updatedUser.dateOfBirth,
+        gender: updatedUser.gender,
+      );
+      // Refresh UI
+      await _loadUserData();
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isLoading || _userData == null) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : const Color(0xFFF7F7FA),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     final profileImageWidget = Stack(
       alignment: Alignment.bottomRight,
       children: [
@@ -86,123 +163,116 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ],
     );
 
-    return Stack(
-      children: [
-        // ===== Background Decoration =====
-        Positioned(
-          top: -40,
-          left: -60,
-          child: Opacity(
-            opacity: 0.18,
-            child: Image.asset(
-              'assets/3.png',
-              width: 180,
-              height: 180,
-            ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : const Color(0xFFF7F7FA),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: const Text(
+          'My Profile',
+          style: TextStyle(
+            color: Color(0xFF222222),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
-        Positioned(
-          top: 120,
-          right: -40,
-          child: Opacity(
-            opacity: 0.13,
-            child: Image.asset(
-              'assets/4.png',
-              width: 120,
-              height: 120,
-            ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings, color: Colors.blueAccent),
+            tooltip: "Edit Profile",
+            onPressed: _openEditProfile,
           ),
-        ),
-        Positioned(
-          bottom: 80,
-          left: -30,
-          child: Opacity(
-            opacity: 0.12,
-            child: Image.asset(
-              'assets/5.png',
-              width: 110,
-              height: 110,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          right: -40,
-          child: Opacity(
-            opacity: 0.13,
-            child: Image.asset(
-              'assets/6.png',
-              width: 120,
-              height: 120,
-            ),
-          ),
-        ),
-        Positioned(
-          top: 320,
-          left: 40,
-          child: Opacity(
-            opacity: 0.10,
-            child: Image.asset(
-              'assets/7.png',
-              width: 90,
-              height: 90,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          left: 60,
-          child: Opacity(
-            opacity: 0.10,
-            child: Image.asset(
-              'assets/8.png',
-              width: 100,
-              height: 100,
-            ),
-          ),
-        ),
-        Positioned(
-          top: 0,
-          right: 40,
-          child: Opacity(
-            opacity: 0.10,
-            child: Image.asset(
-              'assets/9.png',
-              width: 90,
-              height: 90,
-            ),
-          ),
-        ),
-        // ===== Main Content =====
-        Scaffold(
-          backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : const Color(0xFFF7F7FA),
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: const Text(
-              'My Profile',
-              style: TextStyle(
-                color: Color(0xFF222222),
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+        ],
+        iconTheme: IconThemeData(color: Color(0xFF222222)),
+      ),
+      body: Stack(
+        children: [
+          Positioned(
+            top: -40,
+            left: -60,
+            child: Opacity(
+              opacity: 0.18,
+              child: Image.asset(
+                'assets/3.png',
+                width: 180,
+                height: 180,
               ),
             ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.settings, color: Colors.blueAccent),
-                tooltip: "Edit Profile",
-                onPressed: () {
-                  // TODO: Navigasi ke halaman edit profile atau tampilkan dialog edit data diri
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Fitur edit profile coming soon!')),
-                  );
-                },
-              ),
-            ],
-            iconTheme: IconThemeData(color: Color(0xFF222222)),
           ),
-          body: SingleChildScrollView(
+          Positioned(
+            top: 120,
+            right: -40,
+            child: Opacity(
+              opacity: 0.13,
+              child: Image.asset(
+                'assets/4.png',
+                width: 120,
+                height: 120,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 80,
+            left: -30,
+            child: Opacity(
+              opacity: 0.12,
+              child: Image.asset(
+                'assets/5.png',
+                width: 110,
+                height: 110,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: -40,
+            child: Opacity(
+              opacity: 0.13,
+              child: Image.asset(
+                'assets/6.png',
+                width: 120,
+                height: 120,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 320,
+            left: 40,
+            child: Opacity(
+              opacity: 0.10,
+              child: Image.asset(
+                'assets/7.png',
+                width: 90,
+                height: 90,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 60,
+            child: Opacity(
+              opacity: 0.10,
+              child: Image.asset(
+                'assets/8.png',
+                width: 100,
+                height: 100,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 40,
+            child: Opacity(
+              opacity: 0.10,
+              child: Image.asset(
+                'assets/9.png',
+                width: 90,
+                height: 90,
+              ),
+            ),
+          ),
+          SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
               child: Column(
@@ -227,20 +297,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: [
                         _ProfileTextField(
                           label: "Full Name",
-                          value: widget.username,
+                          value: _userData!.username,
                           icon: Icons.person_outline,
                         ),
                         SizedBox(height: 12),
                         _ProfileTextField(
                           label: "Gender",
-                          value: widget.gender ?? "-",
+                          value: _userData!.gender ?? "-",
                           icon: Icons.wc,
                         ),
                         SizedBox(height: 12),
                         _ProfileTextField(
                           label: "Date of Birth",
-                          value: widget.dateOfBirth != null
-                              ? "${widget.dateOfBirth!.day}/${widget.dateOfBirth!.month}/${widget.dateOfBirth!.year}"
+                          value: _userData!.dateOfBirth != null
+                              ? "${_userData!.dateOfBirth!.day}/${_userData!.dateOfBirth!.month}/${_userData!.dateOfBirth!.year}"
                               : "-",
                           icon: Icons.cake_outlined,
                         ),
@@ -386,10 +456,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       }
                       // Hapus session login dan data profil
                       await prefs.setBool('is_logged_in', false);
-                      await prefs.remove('user_id');
-                      await prefs.remove('user_username');
-                      await prefs.remove('user_birthdate');
-                      await prefs.remove('user_gender');
+                      await userManager.clearUserProfile();
                       // Navigasi ke login page
                       if (mounted) {
                         Navigator.of(context).pushAndRemoveUntil(
@@ -416,6 +483,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       // Hapus session login
                       final prefs = await SharedPreferences.getInstance();
                       await prefs.setBool('is_logged_in', false);
+                      await userManager.clearUserProfile();
                       widget.onLogout();
                     },
                   ),
@@ -424,8 +492,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

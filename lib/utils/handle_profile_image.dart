@@ -25,6 +25,20 @@ class ProfileImageHelper {
     return null;
   }
 
+  /// Ambil foto dari kamera, simpan lokal, lalu kembalikan file-nya
+  static Future<File?> pickAndSaveProfileImageFromCamera(int userId) async {
+    try {
+      final picked = await _picker.pickImage(source: ImageSource.camera);
+      if (picked != null) {
+        final savePath = await _getImagePath(userId);
+        return await File(picked.path).copy(savePath);
+      }
+    } catch (e) {
+      print("Error picking image from camera: $e");
+    }
+    return null;
+  }
+
   /// Load foto profil lokal jika sudah pernah disimpan
   static Future<File?> loadProfileImage(int userId) async {
     final path = await _getImagePath(userId);

@@ -5,6 +5,7 @@ import 'package:project_tpm/services/user_service.dart';
 import 'package:project_tpm/shared/color_palette.dart';
 import 'package:project_tpm/models/user.dart';
 import 'package:project_tpm/utils/user_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: primaryColor,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark ? Colors.black : primaryColor,
         body: Stack(
           children: [
             Positioned.fill(
@@ -215,6 +216,10 @@ class _LoginPageState extends State<LoginPage> {
 
           if (data && user != null) {
             await userManager.saveUserProfile(id: user.id!, username: user.username, gender: user.gender, birthdate: user.dateOfBirth);
+            // Set session login
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('is_logged_in', true);
+
             setState(() {
               text = "Login success!";
               isLoginSuccess = true;
